@@ -1,0 +1,248 @@
+{
+  "common": {
+    "appName": "Braille Sync",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "clear": "Clear",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "back": "Back"
+  },
+  "nav": {
+    "home": "Home",
+    "translate": "Translate",
+    "dashboard": "Dashboard",
+    "history": "History",
+    "samples": "Samples"
+  },
+  "landing": {
+    "tagline": "Powered by Advanced OCR & AI",
+    "title": "Transform Text into",
+    "titleHighlight": "Braille",
+    "subtitle": "Empowering accessibility through seamless text-to-Braille conversion with AI-powered OCR technology",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "features": {
+      "title": "Features",
+      "multiInput": {
+        "title": "Multiple Input Methods",
+        "desc": "Text, images, audio, and file uploads"
+      },
+      "realTime": {
+        "title": "Real-time Conversion",
+        "desc": "Instant text-to-Braille translation"
+      },
+      "history": {
+        "title": "Translation History",
+        "desc": "Access and manage past translations"
+      },
+      "audio": {
+        "title": "Audio Playback",
+        "desc": "Text-to-speech functionality"
+      }
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "subtitle": "Start converting text to Braille now",
+      "button": "Start Translating"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your translation activity and insights",
+    "stats": {
+      "total": "Total Translations",
+      "text": "Text Inputs",
+      "image": "Image Uploads",
+      "audio": "Audio Files"
+    },
+    "recentTranslations": {
+      "title": "Recent Translations",
+      "subtitle": "Your latest translation activity",
+      "empty": "No translations yet",
+      "emptySubtitle": "Start by creating your first translation!",
+      "viewAll": "View All History"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "subtitle": "Get started with common tasks",
+      "newTranslation": "New Translation",
+      "viewHistory": "View History"
+    }
+  },
+  "translate": {
+    "title": "Translation Tool",
+    "subtitle": {
+      "normal": "Convert text to Braille using multiple input methods",
+      "reverse": "Convert Braille to text using reverse translation"
+    },
+    "toggleMode": {
+      "toBraille": "Text → Braille",
+      "toText": "Braille → Text"
+    },
+    "input": {
+      "title": "Input",
+      "brailleTitle": "Braille Input"
+    },
+    "tabs": {
+      "text": "Text",
+      "image": "Image",
+      "audio": "Audio",
+      "microphone": "Microphone",
+      "file": "File"
+    },
+    "output": {
+      "braille": "Braille Output",
+      "text": "Text Output",
+      "placeholder": "Converted text will appear here..."
+    },
+    "preview": {
+      "title": "Input Preview",
+      "brailleTitle": "Braille Preview",
+      "placeholder": "Input text will appear here...",
+      "braillePlaceholder": "Braille input will appear here..."
+    },
+    "actions": {
+      "save": "Save to History",
+      "clear": "Clear",
+      "copy": "Copy",
+      "download": "Download"
+    },
+    "toast": {
+      "saved": {
+        "title": "Saved",
+        "desc": "Translation saved to history"
+      },
+      "cleared": {
+        "title": "Cleared",
+        "desc": "All fields have been cleared"
+      },
+      "error": {
+        "title": "Error",
+        "desc": "Failed to save translation"
+      }
+    }
+  },
+  "history": {
+    "title": "Translation History",
+    "subtitle": "View and manage your previous translations",
+    "searchPlaceholder": "Search translations...",
+    "filterByMethod": "Filter by method",
+    "sortBy": "Sort by",
+    "methods": {
+      "all": "All Methods",
+      "text": "Text Input",
+      "image": "Image Upload",
+      "audio": "Audio Upload",
+      "microphone": "Microphone",
+      "file": "File Upload",
+      "braille": "Reverse Translation"
+    },
+    "sortOptions": {
+      "dateDesc": "Newest First",
+      "dateAsc": "Oldest First",
+      "lengthDesc": "Longest First",
+      "lengthAsc": "Shortest First"
+    },
+    "bulk": {
+      "selected": "selected",
+      "export": "Export",
+      "exportSelected": "Export Selected",
+      "exportAll": "Export All",
+      "deleteSelected": "Delete Selected"
+    },
+    "empty": {
+      "title": "No translations found",
+      "subtitle": "Try adjusting your filters or search query",
+      "noHistory": "No translation history yet",
+      "noHistorySubtitle": "Start creating translations to see them here"
+    },
+    "labels": {
+      "input": "Input",
+      "braille": "Braille"
+    }
+  },
+  "braille": {
+    "display": {
+      "title": "Braille Output",
+      "size": "Display Size",
+      "sizes": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "xlarge": "Extra Large"
+      },
+      "viewDots": "View as Dots",
+      "focusMode": "Focus Mode",
+      "copy": "Copy Braille",
+      "download": "Download",
+      "empty": "Braille output will appear here..."
+    },
+    "dots": {
+      "title": "Braille Dots Visualization",
+      "close": "Close"
+    }
+  },
+  "audio": {
+    "player": {
+      "title": "Audio Player",
+      "subtitle": "Listen to your text",
+      "play": "Play",
+      "pause": "Pause",
+      "stop": "Stop",
+      "speed": "Speed",
+      "empty": "No text to play"
+    },
+    "upload": {
+      "title": "Audio Upload",
+      "subtitle": "Upload an audio file to extract text",
+      "button": "Choose Audio File",
+      "types": "Supported: MP3, WAV, M4A",
+      "uploading": "Processing audio...",
+      "error": "Failed to process audio file"
+    }
+  },
+  "image": {
+    "upload": {
+      "title": "Image Upload",
+      "subtitle": "Upload an image to extract text",
+      "button": "Choose Image",
+      "types": "Supported: JPG, PNG, JPEG",
+      "uploading": "Processing image...",
+      "error": "Failed to process image"
+    }
+  },
+  "microphone": {
+    "title": "Microphone Input",
+    "subtitle": "Speak to convert speech to text",
+    "start": "Start Recording",
+    "stop": "Stop Recording",
+    "recording": "Recording...",
+    "error": "Microphone access denied"
+  },
+  "theme": {
+    "title": "Appearance",
+    "modes": {
+      "light": "Light",
+      "dark": "Dark",
+      "highContrast": "High Contrast",
+      "colorblind": "Colorblind"
+    },
+    "accent": "Accent Color",
+    "accents": {
+      "blue": "Blue",
+      "green": "Green",
+      "purple": "Purple",
+      "orange": "Orange",
+      "pink": "Pink"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select Language"
+  }
+}
