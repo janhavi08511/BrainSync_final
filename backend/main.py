@@ -32,7 +32,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"],  # Update with your frontend URL
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:3000","https://brainsync-final.onrender.com"],  # Update with your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
