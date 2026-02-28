@@ -1,4 +1,4 @@
-# 🔤 Braille Sync   - https://braille-sync.vercel.app/
+# 🔤 Braille Sync   - 
 
 <div align="center">
 
@@ -444,5 +444,6 @@ You can also check the help documentation: Download and Building the app（ [htt
 #   B r a i n S y n c 
  
  
-#   B r a i n S y n c _ f i n a l  
+#   B r a i n S y n c _ f i n a l 
+ 
  
