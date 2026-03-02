@@ -12,6 +12,7 @@ interface AudioUploadProps {
 export const AudioUpload = ({ onTextExtracted }: AudioUploadProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +37,10 @@ export const AudioUpload = ({ onTextExtracted }: AudioUploadProps) => {
       }
       
       setSelectedFile(file);
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+      setAudioUrl(URL.createObjectURL(file));
     }
   };
 
@@ -59,6 +64,7 @@ export const AudioUpload = ({ onTextExtracted }: AudioUploadProps) => {
           description: 'Audio transcribed successfully',
         });
         setSelectedFile(null);
+        setAudioUrl(null);
       } else {
         toast({
           title: 'No speech found',
@@ -112,6 +118,14 @@ export const AudioUpload = ({ onTextExtracted }: AudioUploadProps) => {
           )}
         </Button>
       </div>
+      {audioUrl && (
+        <audio
+          src={audioUrl}
+          controls
+          className="mt-2 w-full"
+          onEnded={() => URL.revokeObjectURL(audioUrl)}
+        />
+      )}
     </div>
   );
 };

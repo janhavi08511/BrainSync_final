@@ -77,34 +77,29 @@ export default function TranslationPage() {
  //
 const handleSummarize = async () => {
   if (!inputText) return;
+
   setIsProcessing(true);
+
   try {
-    const summary = await summarizeText(inputText); // Calls the helper in api.ts
-    
-    if (summary === inputText) {
-      toast({ 
-        title: "Summarization Busy", 
-        description: "The AI model is waking up. Please try again in a few seconds.", 
-        variant: "destructive" 
-      });
-    } else {
-      setInputText(summary); // This triggers the Braille regeneration
-      toast({ 
-        title: "Summarized", 
-        description: "Text condensed successfully." 
-      });
-    }
+    const summary = await summarizeText(inputText);
+
+    setInputText(summary);
+
+    toast({
+      title: "Summarized",
+      description: "Text condensed successfully."
+    });
+
   } catch (error) {
-    toast({ 
-      title: "Summary Failed", 
-      description: "Could not process document summary.", 
-      variant: "destructive" 
+    toast({
+      title: "Summary Failed",
+      description: "Could not process document summary.",
+      variant: "destructive"
     });
   } finally {
     setIsProcessing(false);
   }
 };
-
   const handleTextExtracted = (text: string, method: "image" | "audio" | "microphone" | "file") => {
     setInputText(text);
     setCurrentMethod(method);

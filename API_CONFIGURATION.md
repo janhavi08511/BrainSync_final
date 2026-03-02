@@ -36,8 +36,20 @@ const TTS_API_KEY = "your-api-key";
 Currently configured with appmedo.com integration.
 
 **File:** `src/services/api.ts`
-- API URL: `https://api-integrations.appmedo.com/app-8amgmr6rpywx/api-Xa6JZJO25zqa/v1/audio/transcriptions`
-- Current Key: Hardcoded (may be expired)
+- API URL: configurable via Vite env `VITE_STT_API_URL` (recommended)
+- API Key: configurable via Vite env `VITE_STT_API_KEY` (recommended)
+
+The frontend will fall back to a bundled default endpoint/key if these
+variables are not set (convenient for quick dev), but this is **not
+recommended for production**. To configure your own STT provider, add a
+`.env` at the project root (or `frontend/.env`) with the following:
+
+```env
+VITE_STT_API_URL=https://your-stt-provider.com/api/transcribe
+VITE_STT_API_KEY=your-api-key
+```
+
+After editing `.env` restart the dev server so Vite can pick up the new variables.
 
 **Fallback Behavior:** If API fails, returns a placeholder message: `[Audio transcription unavailable - please check STT API configuration]`
 

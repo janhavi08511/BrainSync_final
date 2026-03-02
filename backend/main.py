@@ -4,7 +4,12 @@ from contextlib import asynccontextmanager
 from config import settings
 from database import connect_db, close_db
 from routes import auth, translations
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 import logging
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,31 +26,39 @@ async def lifespan(app: FastAPI):
     await close_db()
 
 
-# Create FastAPI app
+# ✅ Create FastAPI app FIRST
 app = FastAPI(
     title="BrainSync API",
     description="Backend API for BrainSync translation service",
     version="1.0.0",
     lifespan=lifespan
 )
+from routes.ai import router as ai_router
+app.include_router(ai_router)
 
-# Add CORS middleware
+# ✅ Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:3000","https://brainsync-final.onrender.com"],  # Update with your frontend URL
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:3000",
+        "https://brainsync-final.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include routers (no global prefix so paths match frontend expectations)
+
+# ✅ Include routers AFTER app is created
 app.include_router(auth.router)
 app.include_router(translations.router)
+app.include_router(ai_router)   # 🔥 AI routes added here
 
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
     return {
         "message": "Welcome to BrainSync API",
         "docs": "/docs",
@@ -55,7 +68,6 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
     return {"status": "healthy"}
 
 

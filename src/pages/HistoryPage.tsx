@@ -77,13 +77,12 @@ export default function HistoryPage() {
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (t) =>
-          t.input_text.toLowerCase().includes(query) ||
-          t.braille_output.toLowerCase().includes(query)
-      );
+      filtered = filtered.filter((t) => {
+        const input = (t.input_text || "" ).toLowerCase();
+        const braille = (t.braille_output || "").toLowerCase();
+        return input.includes(query) || braille.includes(query);
+      });
     }
-
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
@@ -142,12 +141,16 @@ export default function HistoryPage() {
 
     const csv = [
       ["Date", "Method", "Input", "Braille Output"],
-      ...toExport.map((t) => [
-        new Date(t.created_at).toLocaleString(),
-        t.input_method,
-        t.input_text.replace(/"/g, '""'),
-        t.braille_output.replace(/"/g, '""'),
-      ]),
+      ...toExport.map((t) => {
+        const input = (t.input_text || "").replace(/"/g, '""');
+        const braille = (t.braille_output || "").replace(/"/g, '""');
+        return [
+          new Date(t.created_at || "").toLocaleString(),
+          t.input_method || "",
+          input,
+          braille,
+        ];
+      }),
     ]
       .map((row) => row.map((cell) => `"${cell}"`).join(","))
       .join("\n");
@@ -423,13 +426,13 @@ export default function HistoryPage() {
                         <div className="space-y-1">
                           <p className="text-sm font-medium">Input:</p>
                           <p className="text-sm text-muted-foreground break-words">
-                            {translation.input_text}
+                            {translation.input_text || translation.source_text || ""}
                           </p>
                         </div>
                         <div className="space-y-1">
                           <p className="text-sm font-medium">Braille:</p>
                           <p className="text-2xl font-mono break-all">
-                            {translation.braille_output}
+                            {translation.braille_output || ""}
                           </p>
                         </div>
                       </div>

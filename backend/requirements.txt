@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 motor
 pydantic[email]
 pydantic-settings
@@ -7,3 +7,4 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 python-dotenv
+requests

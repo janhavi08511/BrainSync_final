@@ -12,11 +12,14 @@ interface MicrophoneInputProps {
 export const MicrophoneInput = ({ onTextExtracted }: MicrophoneInputProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const { toast } = useToast();
 
   const startRecording = async () => {
+    // clear old preview
+    setAudioUrl(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -32,9 +35,13 @@ export const MicrophoneInput = ({ onTextExtracted }: MicrophoneInputProps) => {
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
         const audioFile = new File([audioBlob], 'recording.webm', { type: 'audio/webm' });
-        
+
+        // expose a preview URL so user can listen if needed
+        const url = URL.createObjectURL(audioBlob);
+        setAudioUrl(url);
+
         stream.getTracks().forEach(track => track.stop());
-        
+
         setIsProcessing(true);
         try {
           const text = await transcribeAudio(audioFile);
@@ -113,6 +120,14 @@ export const MicrophoneInput = ({ onTextExtracted }: MicrophoneInputProps) => {
           </>
         )}
       </Button>
+      {audioUrl && (
+        <audio
+          src={audioUrl}
+          controls
+          className="mt-2 w-full"
+          onEnded={() => URL.revokeObjectURL(audioUrl)}
+        />
+      )}
     </div>
   );
 };

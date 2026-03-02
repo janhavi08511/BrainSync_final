@@ -7,20 +7,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Copy,
-  Check,
-  Download,
-  CheckCircle2,
-  XCircle,
-  Maximize2,
-  Minimize2,
-  ZoomIn,
-  ZoomOut,
-  Eye,
-} from "lucide-react";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -28,6 +14,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Copy,
+  Check,
+  Download,
+  Maximize2,
+  Minimize2,
+  ZoomIn,
+  Eye,
+} from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface BrailleDisplayProps {
   brailleText: string;
@@ -40,7 +37,9 @@ export const BrailleDisplay = ({ brailleText }: BrailleDisplayProps) => {
     "small" | "medium" | "large" | "xlarge"
   >("medium");
   const [showDots, setShowDots] = useState(false);
+
   const { toast } = useToast();
+  const safeText = brailleText ?? "";
 
   const sizeClasses = {
     small: "text-2xl",
@@ -62,179 +61,137 @@ export const BrailleDisplay = ({ brailleText }: BrailleDisplayProps) => {
   };
 
   const handleCopy = async () => {
+    if (!safeText) return;
+
     try {
-      await navigator.clipboard.writeText(brailleText);
+      await navigator.clipboard.writeText(safeText);
       setCopied(true);
 
-      // Add success animation to button
-      const button = document.activeElement as HTMLElement;
-      if (button) {
-        button.classList.add("success-pulse");
-        setTimeout(() => button.classList.remove("success-pulse"), 600);
-      }
-
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            <span>Copied</span>
-          </div>
-        ),
+        title: "Copied",
         description: "Braille text copied to clipboard",
       });
+
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch {
       toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <XCircle className="w-4 h-4" />
-            <span>Error</span>
-          </div>
-        ),
-        description:
-          "Failed to copy text. Please try again or check clipboard permissions.",
+        title: "Error",
+        description: "Failed to copy text.",
         variant: "destructive",
       });
     }
   };
 
   const handleDownload = (format: "txt" | "brf") => {
-    try {
-      const blob = new Blob([brailleText], {
-        type: "text/plain;charset=utf-8",
-      });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `braille-output.${format}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+    if (!safeText) return;
 
-      toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            <span>Downloaded</span>
-          </div>
-        ),
-        description: `Braille text downloaded as .${format} file`,
-      });
-    } catch (error) {
-      toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <XCircle className="w-4 h-4" />
-            <span>Error</span>
-          </div>
-        ),
-        description:
-          "Failed to download file. Please check your browser permissions and try again.",
-        variant: "destructive",
-      });
-    }
+    const blob = new Blob([safeText], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `braille-output.${format}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Downloaded",
+      description: `Downloaded as .${format}`,
+    });
   };
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div className="flex items-center gap-3">
-          <CardTitle className="text-lg font-semibold">
-            Braille Output
-          </CardTitle>
-          {brailleText && (
+          <CardTitle>Braille Output</CardTitle>
+          {safeText && (
             <Badge variant="secondary" className="text-xs">
-              {brailleText.length} characters
+              {safeText.length} characters
             </Badge>
           )}
         </div>
+
         <TooltipProvider>
           <div className="flex gap-2">
+            {/* Toggle Dots */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowDots(!showDots)}
-                  disabled={!brailleText}
+                  disabled={!safeText}
                 >
                   <Eye className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Toggle dot visualization</p>
-              </TooltipContent>
+              <TooltipContent>Toggle dot visualization</TooltipContent>
             </Tooltip>
+
+            {/* Resize */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={cycleBrailleSize}
-                  disabled={!brailleText}
+                  disabled={!safeText}
                 >
                   <ZoomIn className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Change Braille size ({brailleSize})</p>
-              </TooltipContent>
+              <TooltipContent>Change size</TooltipContent>
             </Tooltip>
+
+            {/* Focus */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setFocusMode(true)}
-                  disabled={!brailleText}
+                  disabled={!safeText}
                 >
                   <Maximize2 className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Focus Mode (fullscreen)</p>
-              </TooltipContent>
+              <TooltipContent>Focus Mode</TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCopy}
-                  disabled={!brailleText}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4 mr-2" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copy
-                    </>
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Copy Braille text to clipboard</p>
-              </TooltipContent>
-            </Tooltip>
+
+            {/* Copy */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              disabled={!safeText}
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 mr-2" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy
+                </>
+              )}
+            </Button>
+
+            {/* Download */}
             <DropdownMenu>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" disabled={!brailleText}>
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </DropdownMenuTrigger>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Download as .txt or .brf file</p>
-                </TooltipContent>
-              </Tooltip>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" disabled={!safeText}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </Button>
+              </DropdownMenuTrigger>
+
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={() => handleDownload("txt")}>
                   Download as .txt
@@ -247,18 +204,19 @@ export const BrailleDisplay = ({ brailleText }: BrailleDisplayProps) => {
           </div>
         </TooltipProvider>
       </CardHeader>
+
       <CardContent>
         <div className="min-h-[150px] p-4 bg-muted rounded-lg">
-          {brailleText ? (
+          {safeText ? (
             <div
-              className={`${sizeClasses[brailleSize]} leading-relaxed break-all font-mono transition-all duration-300`}
+              className={`${sizeClasses[brailleSize]} leading-relaxed break-all font-mono`}
             >
               {showDots ? (
-                <div className="grid gap-4">
-                  {brailleText.split("").map((char, idx) => (
+                <div className="flex flex-wrap gap-4">
+                  {safeText.split("").map((char, idx) => (
                     <div
                       key={idx}
-                      className="inline-flex items-center gap-2 p-2 bg-background rounded border"
+                      className="flex flex-col items-center p-2 bg-background rounded border"
                     >
                       <span>{char}</span>
                       <span className="text-xs text-muted-foreground">⠿</span>
@@ -266,7 +224,7 @@ export const BrailleDisplay = ({ brailleText }: BrailleDisplayProps) => {
                   ))}
                 </div>
               ) : (
-                <p className="braille-text">{brailleText}</p>
+                <p>{safeText}</p>
               )}
             </div>
           ) : (
@@ -277,56 +235,27 @@ export const BrailleDisplay = ({ brailleText }: BrailleDisplayProps) => {
         </div>
       </CardContent>
 
-      {/* Focus Mode Dialog */}
+      {/* Focus Mode */}
       <Dialog open={focusMode} onOpenChange={setFocusMode}>
         <DialogContent className="max-w-screen-xl w-full h-[90vh] p-8">
           <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between mb-6">
               <h2 className="text-2xl font-bold">Focus Mode</h2>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={cycleBrailleSize}>
-                  <ZoomIn className="w-4 h-4 mr-2" />
-                  {brailleSize}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowDots(!showDots)}
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  {showDots ? "Hide" : "Show"} Dots
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setFocusMode(false)}
-                >
-                  <Minimize2 className="w-4 h-4 mr-2" />
-                  Exit
-                </Button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-auto p-8 bg-muted rounded-lg">
-              <div
-                className={`${sizeClasses[brailleSize]} leading-relaxed font-mono text-center`}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setFocusMode(false)}
               >
-                {showDots ? (
-                  <div className="flex flex-wrap justify-center gap-4">
-                    {brailleText.split("").map((char, idx) => (
-                      <div
-                        key={idx}
-                        className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 shadow-sm"
-                      >
-                        <span className="text-6xl">{char}</span>
-                        <span className="text-sm text-muted-foreground">
-                          ⠿ Pattern
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="braille-text">{brailleText}</p>
-                )}
+                <Minimize2 className="w-4 h-4 mr-2" />
+                Exit
+              </Button>
+            </div>
+
+            <div className="flex-1 overflow-auto p-8 bg-muted rounded-lg text-center">
+              <div
+                className={`${sizeClasses[brailleSize]} font-mono leading-relaxed`}
+              >
+                {safeText}
               </div>
             </div>
           </div>
